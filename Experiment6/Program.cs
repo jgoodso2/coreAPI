@@ -20,35 +20,7 @@ namespace ProjectInfo.API
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel(options =>
-                {
-                    // listen for HTTP
-                    options.Listen(IPAddress.Parse("127.0.0.1"), 40000);
-
-                    // retrieve certificate from store
-                    using (var store = new X509Store(StoreName.My))
-                    {
-                        store.Open(OpenFlags.ReadOnly);
-                        var certs = store.Certificates.Find(X509FindType.FindBySubjectName, "xrdcwpdbsmsp03_boo", false);
-                        if (certs.Count > 0)
-                        {
-                            var certificate = certs[0];
-
-                            // listen for HTTPS
-                            options.Listen(IPAddress.Parse("0.0.0.0"), 40001, listenOptions =>
-                            {
-                                listenOptions.UseHttps(certificate);
-                            });
-                        }
-                    }
-                })
-
-                //.UseConfiguration(config)
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseStartup<Startup>()
-                //.UseUrls("http://0.0.0.0:5000")  ///this may break debugging...
-                .Build();
+            var host = BuildWebHost(args);
 
             using (var scope = host.Services.CreateScope())
             {
@@ -70,6 +42,37 @@ namespace ProjectInfo.API
             host.Run();
 
         }
+
+        public static IWebHost BuildWebHost(string[] args) =>
+           new WebHostBuilder()
+                .UseKestrel(options =>
+                {
+                    // listen for HTTP
+                    options.Listen(IPAddress.Parse("127.0.0.1"), 40000);
+
+                    // retrieve certificate from store
+                    using (var store = new X509Store(StoreName.My))
+                    {
+                        store.Open(OpenFlags.ReadOnly);
+                        var certs = store.Certificates.Find(X509FindType.FindBySubjectName, "martin.wingtip.com", false);
+                        if (certs.Count > 0)
+                        {
+                            var certificate = certs[0];
+
+                            // listen for HTTPS
+                            options.Listen(IPAddress.Parse("0.0.0.0"), 40001, listenOptions =>
+                            {
+                                listenOptions.UseHttps(certificate);
+                            });
+                        }
+                    }
+                })
+
+                //.UseConfiguration(config)
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseStartup<Startup>()
+                //.UseUrls("http://0.0.0.0:5000")  ///this may break debugging...
+                .Build();
         //{
         //    CreateWebHostBuilder(args).Build().Run();
         //}

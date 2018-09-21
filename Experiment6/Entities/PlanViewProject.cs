@@ -14,8 +14,9 @@ namespace ProjectInfo.API.Entities
         public string ProjectName { get; set; }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [MaxLength(200)]
+        public string Id { get; set; }
 
         public string ppl_Code { get; set; }
 

@@ -68,7 +68,7 @@ namespace ProjectInfo.API
             //            services.AddTransient<IMailService, CloudMailService>();
             //#endif
             //var connectionString = Configuration["connectionStrings:ProjectInfoDBConnectionString"];
-            var connectionString = "Server= xrdcwpdbsmsp03;Database=mapperDB;Trusted_Connection=True;";
+            var connectionString = "Server= MARTIN;Database=mapperDB;Integrated Security=SSPI;";
             services.AddDbContext<ProjectContext>(o => o.UseSqlServer(connectionString));
 
             services.AddHttpsRedirection(options =>
